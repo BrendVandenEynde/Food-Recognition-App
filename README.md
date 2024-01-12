@@ -29,4 +29,6 @@ Plateful Pal is powered by TensorFlow.js and the Teachable Machine Image model. 
 
 3. Follow the on-screen instructions to upload an image and see Plateful Pal in action!
 
+You can try it live here: https://plateful-pal-fruit-and-vegetables-edition.vercel.app/ 
+
 Feel free to explore, experiment, and enjoy the delightful world of Plateful Pal!
