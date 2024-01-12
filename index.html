@@ -1,17 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Recognition App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Plateful Pal - Discover the Culinary World</title>
+    <link rel="stylesheet" href="./style/styles.css">
 </head>
-<body>
-    <h1>Food Recognition App</h1>
-    <input type="file" id="imageInput" accept="image/*">
-    <button onclick="predict()">Predict</button>
-    <p id="prediction"></p>
 
-    <script src="app.js"></script>
+<body>
+    <header>
+        <h1>Discover the Culinary World</h1>
+    </header>
+
+    <section class="hero-section">
+        <div class="background-image"></div>
+        <div class="hero-content">
+            <h2>Welcome to Plateful Pal!</h2>
+            <p>Unleash the power of our AI to identify and learn about various cuisines from around the globe.</p>
+            <p>Simply capture an image, and let the magic happen!</p>
+            <p>Ready to explore? </p>
+            <button onclick="navigateToModelPage()">Start now</button>
+        </div>
+    </section>
+
+    <section class="recipe-section">
+        <h2>Recipe of the Day</h2>
+        <p>Spaghetti Carbonara</p>
+        <p>Enjoy this classic Italian dish made with eggs, cheese, pancetta, and black pepper.</p>
+        <button onclick="navigateToRecipePage()">See Recipe</button>
+    </section>
+
+    <section class="social-media">
+        <h2>Connect with Us</h2>
+        <div class="social-icons">
+            <img src="./media/icons/facebook-icon.png" alt="Facebook" class="icon">
+            <img src="./media/icons/X_icon_2.svg.png" alt="Twitter" class="icon">
+            <img src="./media/icons/Instagram_icon.png" alt="Instagram" class="icon">
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Plateful Pal. All rights reserved.</p>
+    </footer>
+
 </body>
+
+<script>
+    function navigateToRecipePage() {
+        window.location.href = "./pages/recipeOfTheDay.html";
+    }
+</script>
+
+
 </html>
