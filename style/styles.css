@@ -58,7 +58,7 @@ h1 {
 
 .recipe-section {
     margin: 20px;
-    margin-top: 15%;
+    margin-top: 45%;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -111,6 +111,35 @@ footer {
     width: 92%;
     bottom: 0;
     left: 0;
+}
+
+/* Larger screens */
+@media only screen and (min-width: 601px) {
+    body {
+        overflow: hidden; /* Hide overflow content on larger screens */
+    }
+
+    h1 {
+        display: block; /* Display the apology message */
+        font-size: 1.5em; /* Adjusted heading font size for the apology message */
+        margin-top: 10%; /* Added margin-top for better spacing */
+    }
+
+    .apology-message {
+        display: block; /* Display the apology message */
+        font-size: 1.2em; /* Adjusted font size for the apology message */
+        margin: 20px; /* Added margin for better spacing */
+        color: #ffffff;
+    }
+
+    .background-image,
+    header,
+    .hero-section,
+    .recipe-section,
+    .social-media,
+    footer {
+        display: none; /* Hide other sections */
+    }
 }
 
 /* Mobile-specific styles */
