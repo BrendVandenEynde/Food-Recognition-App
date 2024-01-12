@@ -27,6 +27,12 @@
             margin: 20px;
         }
 
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+
         #image-input {
             margin-bottom: 20px;
             display: none; /* Hide the input initially */
@@ -51,6 +57,7 @@
 
         #result-section {
             margin-top: 20px;
+            margin-bottom: 15%;
             font-size: 18px;
             text-align: center;
         }
@@ -79,10 +86,12 @@
         <h1>Welcome to Plateful Pal, Fruit and Vegetables Edition</h1>
     </header>
     <section id="main-section">
+        <h2>🍏🥦 Veggie Vision: Decode the Secrets of Your Greens! 🥕🔍</h2>
         <img id="uploaded-image" alt="Uploaded Image">
         <label for="image-input" class="pseudo__button">Select an image</label>
         <input type="file" id="image-input" accept="image/*" onchange="displayImage()">
         <button class="pseudo__button" onclick="detectFood()">Recognize</button>
+         <h2>You're probably looking at...</h2>
         <div id="result-section"></div>
     </section>
     <footer>
