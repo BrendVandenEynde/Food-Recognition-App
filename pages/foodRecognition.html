@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plateful Pal, Fruits and vegetables edition</title>
+    <title>Plateful Pal, Fruits and Vegetables Edition</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -29,24 +29,22 @@
 
         #image-input {
             margin-bottom: 10px;
+            display: none; /* Hide the input initially */
         }
 
-        button {
+        .pseudo__button {
             background-color: #333;
             color: #fff;
             border: none;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 10px;
         }
 
         #result-section {
             margin-top: 20px;
             font-size: 18px;
-        }
-
-        #webcam-container {
-            margin-top: 20px;
         }
 
         footer {
@@ -62,63 +60,63 @@
 </head>
 <body>
     <header>
-        <h1>Plateful Pal, Fruit and vegetables edition</h1>
+        <h1>Plateful Pal, Fruit and Vegetables Edition</h1>
     </header>
     <section id="main-section">
+        <label for="image-input" class="pseudo__button">Select an image</label>
         <input type="file" id="image-input" accept="image/*">
-        <button onclick="recognizeFood()">Recognize</button>
+        <button class="pseudo__button" onclick="detectFood()">Recognize</button>
         <div id="result-section"></div>
-
-        <div>Teachable Machine Image Model</div>
-        <button type="button" onclick="init()">Start</button>
-        <div id="webcam-container"></div>
-        <div id="label-container"></div>
     </section>
     <footer>
         <p>&copy; 2024 Plateful Pal. All rights reserved.</p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-    <script src="../script/app.js"></script>
     <script type="text/javascript">
-        const URL = "https://teachablemachine.withgoogle.com/models/sUeTOVeIy/";
-        let model, webcam, labelContainer, maxPredictions;
+        const URL = "model/";
+        let model, maxPredictions;
 
         async function init() {
-            const modelURL = URL + "../model/model.json";
-            const metadataURL = URL + "../model/metadata.json";
-            const weightsURL = URL + "../model/weights.bin";
+            const modelURL =  "../model/model.json";
+            const metadataURL = "../model/metadata.json";
+            const weightsURL = "../model/weights.bin";
 
             model = await tmImage.load(modelURL, metadataURL, weightsURL);
             maxPredictions = model.getTotalClasses();
+        }
 
-            const flip = true;
-            webcam = new tmImage.Webcam(200, 200, flip);
-            await webcam.setup();
-            await webcam.play();
-            window.requestAnimationFrame(loop);
+        async function detectFood() {
+            const imageInput = document.getElementById("image-input");
+            const resultSection = document.getElementById("result-section");
 
-            document.getElementById("webcam-container").appendChild(webcam.canvas);
-            labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) {
-                labelContainer.appendChild(document.createElement("div"));
+            if (imageInput.files.length > 0) {
+                try {
+                    const reader = new FileReader();
+
+                    reader.onload = async function (e) {
+                        const image = new Image();
+                        image.src = e.target.result;
+
+                        await image.decode();
+                        const predictions = await model.predict(image);
+
+                        resultSection.innerHTML = `
+                            <p>Class: ${predictions[0].className}</p>
+                            <p>Probability: ${(predictions[0].probability * 100).toFixed(2)}%</p>
+                        `;
+                    };
+
+                    reader.readAsDataURL(imageInput.files[0]);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            } else {
+                console.error('No file selected.');
             }
         }
 
-        async function loop() {
-            webcam.update();
-            await predict();
-            window.requestAnimationFrame(loop);
-        }
-
-        async function predict() {
-            const prediction = await model.predict(webcam.canvas);
-            for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                labelContainer.childNodes[i].innerHTML = classPrediction;
-            }
-        }
+        init(); // Initialize the model when the page loads
     </script>
 </body>
 </html>
