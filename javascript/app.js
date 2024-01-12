@@ -1,25 +1,29 @@
-async function predict() {
-    const fileInput = document.getElementById('imageInput');
-    const predictionText = document.getElementById('prediction');
+async function recognizeFood() {
+    const imageInput = document.getElementById('image-input');
+    const resultSection = document.getElementById('result-section');
 
-    const file = fileInput.files[0];
-    if (!file) {
-        alert('Please select an image');
-        return;
-    }
-
-    // Replace 'MODEL_ENDPOINT' with the actual URL of your pre-trained model
-    const modelEndpoint = 'MODEL_ENDPOINT';
+    const file = imageInput.files[0];
     
-    // Use an appropriate method to send the image file to the model
-    const prediction = await sendToModel(modelEndpoint, file);
+    if (file) {
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
 
-    // Display the prediction result
-    predictionText.innerText = `Prediction: ${prediction}`;
-}
+            const response = await fetch('/api/food-recognize', {
+                method: 'POST',
+                body: formData,
+            });
 
-async function sendToModel(modelEndpoint, imageFile) {
-    // Implement the logic to send the image to the pre-trained model and get the prediction
-    // You may use Fetch API or any other appropriate method for making HTTP requests
-    // Return the prediction result
+            if (response.ok) {
+                const result = await response.json();
+                resultSection.innerHTML = `<p>${result.label}</p>`;
+            } else {
+                console.error('Failed to recognize food.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    } else {
+        console.error('No file selected.');
+    }
 }
