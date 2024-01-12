@@ -27,3 +27,5 @@ async function recognizeFood() {
         console.error('No file selected.');
     }
 }
+
+
