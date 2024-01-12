@@ -28,23 +28,39 @@
         }
 
         #image-input {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             display: none; /* Hide the input initially */
         }
 
         .pseudo__button {
-            background-color: #333;
+            background-color: #4CAF50;
             color: #fff;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 15px 30px;
+            border-radius: 10%;
+            font-size: 18px;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-top: 10%;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pseudo__button:hover {
+            background-color: #45a049;
         }
 
         #result-section {
             margin-top: 20px;
             font-size: 18px;
+            text-align: center;
+        }
+
+        #uploaded-image {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none; /* Hide the image initially */
         }
 
         footer {
@@ -60,11 +76,12 @@
 </head>
 <body>
     <header>
-        <h1>Plateful Pal, Fruit and Vegetables Edition</h1>
+        <h1>Welcome to Plateful Pal, Fruit and Vegetables Edition</h1>
     </header>
     <section id="main-section">
+        <img id="uploaded-image" alt="Uploaded Image">
         <label for="image-input" class="pseudo__button">Select an image</label>
-        <input type="file" id="image-input" accept="image/*">
+        <input type="file" id="image-input" accept="image/*" onchange="displayImage()">
         <button class="pseudo__button" onclick="detectFood()">Recognize</button>
         <div id="result-section"></div>
     </section>
@@ -86,9 +103,26 @@
             maxPredictions = model.getTotalClasses();
         }
 
+        function displayImage() {
+            const imageInput = document.getElementById("image-input");
+            const uploadedImage = document.getElementById("uploaded-image");
+
+            if (imageInput.files.length > 0) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    uploadedImage.src = e.target.result; // Display the uploaded image
+                    uploadedImage.style.display = "block"; // Show the uploaded image
+                };
+
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        }
+
         async function detectFood() {
             const imageInput = document.getElementById("image-input");
             const resultSection = document.getElementById("result-section");
+            const uploadedImage = document.getElementById("uploaded-image");
 
             if (imageInput.files.length > 0) {
                 try {
@@ -98,13 +132,18 @@
                         const image = new Image();
                         image.src = e.target.result;
 
+                        uploadedImage.src = image.src; // Display the uploaded image
+                        uploadedImage.style.display = "block"; // Show the uploaded image
+
                         await image.decode();
                         const predictions = await model.predict(image);
 
-                        resultSection.innerHTML = `
-                            <p>Class: ${predictions[0].className}</p>
-                            <p>Probability: ${(predictions[0].probability * 100).toFixed(2)}%</p>
-                        `;
+                        resultSection.innerHTML = "<p>Predictions:</p>";
+                        for (let i = 0; i < predictions.length; i++) {
+                            resultSection.innerHTML += `
+                                <p>${predictions[i].className}: ${(predictions[i].probability * 100).toFixed(2)}%</p>
+                            `;
+                        }
                     };
 
                     reader.readAsDataURL(imageInput.files[0]);
