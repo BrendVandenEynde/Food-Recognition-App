@@ -91,7 +91,6 @@
         <label for="image-input" class="pseudo__button">Select an image</label>
         <input type="file" id="image-input" accept="image/*" onchange="displayImage()">
         <button class="pseudo__button" onclick="detectFood()">Recognize</button>
-         <h2>You're probably looking at...</h2>
         <div id="result-section"></div>
     </section>
     <footer>
@@ -129,40 +128,44 @@
         }
 
         async function detectFood() {
-            const imageInput = document.getElementById("image-input");
-            const resultSection = document.getElementById("result-section");
-            const uploadedImage = document.getElementById("uploaded-image");
+    const imageInput = document.getElementById("image-input");
+    const resultSection = document.getElementById("result-section");
+    const uploadedImage = document.getElementById("uploaded-image");
 
-            if (imageInput.files.length > 0) {
-                try {
-                    const reader = new FileReader();
+    if (imageInput.files.length > 0) {
+        try {
+            const reader = new FileReader();
 
-                    reader.onload = async function (e) {
-                        const image = new Image();
-                        image.src = e.target.result;
+            reader.onload = async function (e) {
+                const image = new Image();
+                image.src = e.target.result;
 
-                        uploadedImage.src = image.src; // Display the uploaded image
-                        uploadedImage.style.display = "block"; // Show the uploaded image
+                uploadedImage.src = image.src; // Display the uploaded image
+                uploadedImage.style.display = "block"; // Show the uploaded image
 
-                        await image.decode();
-                        const predictions = await model.predict(image);
+                await image.decode();
+                const predictions = await model.predict(image);
 
-                        resultSection.innerHTML = "<p>Predictions:</p>";
-                        for (let i = 0; i < predictions.length; i++) {
-                            resultSection.innerHTML += `
-                                <p>${predictions[i].className}: ${(predictions[i].probability * 100).toFixed(2)}%</p>
-                            `;
-                        }
-                    };
+                // Sort predictions by probability in descending order
+                predictions.sort((a, b) => b.probability - a.probability);
 
-                    reader.readAsDataURL(imageInput.files[0]);
-                } catch (error) {
-                    console.error('Error:', error);
+                // Display only the top 3 predictions
+                resultSection.innerHTML = "<h2>You're probably looking at...</h2>";
+                for (let i = 0; i < Math.min(3, predictions.length); i++) {
+                    resultSection.innerHTML += `
+                        <p>${predictions[i].className}: ${(predictions[i].probability * 100).toFixed(2)}%</p>
+                    `;
                 }
-            } else {
-                console.error('No file selected.');
-            }
+            };
+
+            reader.readAsDataURL(imageInput.files[0]);
+        } catch (error) {
+            console.error('Error:', error);
         }
+    } else {
+        console.error('No file selected.');
+    }
+}
 
         init(); // Initialize the model when the page loads
     </script>
